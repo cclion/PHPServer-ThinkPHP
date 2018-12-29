@@ -132,6 +132,24 @@ www  WEB部署目录（或者子目录）
 
 > 可以使用php自带webserver快速测试
 > 切换到根目录后，启动命令：php think run
+## Nginx配置
+```
+location / { 
+    if (!-e $request_filename) { 
+        rewrite ^(.*)$ /index.php?s=$1 last; 
+        break; 
+    } 
+}
+location ~ \.php {    #去掉$
+    root          H:/PHPServer/WWW;
+    fastcgi_pass   127.0.0.1:9000;
+    fastcgi_index  index.php;
+    fastcgi_split_path_info ^(.+\.php)(.*)$;     #增加这一句
+    fastcgi_param PATH_INFO $fastcgi_path_info;    #增加这一句
+    fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+    include        fastcgi_params;
+}
+```
 
 ## 命名规范
 
