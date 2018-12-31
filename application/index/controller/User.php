@@ -10,6 +10,7 @@ namespace app\index\controller;
 
 use cclion\Y;
 use think\Controller;
+use think\facade\Cache;
 use think\Request;
 use app\index\model\User as UserModel;
 use think\db\Query;
@@ -18,6 +19,26 @@ class User extends Controller {
     public function index()
     {
         return Y::json(0, 'user成功');
+    }
+
+    public function info(Request $request){
+
+        $token = $request->header("Authorization");
+
+        if (!$token){
+            return Y::json(101, '请携带token');
+        }
+
+        $userID = Cache::get($token);
+
+        if (!$userID){
+            return Y::json(101, 'token未找到');
+        }
+
+        $user = UserModel::where('id', $userID)->find();
+
+        return Y::json(0, '',$user);
+        
     }
 
     public function login(Request $request){
@@ -40,11 +61,13 @@ class User extends Controller {
         if ($user->password != $password){
             return Y::json(101, '密码错误');
         }
-        $token = $request->token("toekn","sha1")
+        $token = $request->token("token","sha12");
 
-        return Y::json(0, '登录成功');
+        $userID = $user->id;
 
+        Cache::set($token,$userID,0);
 
+        return Y::json(0, '登录成功',$token);
 
     }
 
