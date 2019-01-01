@@ -21,6 +21,38 @@ class User extends Controller {
         return Y::json(0, 'user成功');
     }
 
+    public function updateInfo(Request $request){
+
+        $token = $request->header("Authorization");
+
+        if (!$token){
+            return Y::json(101, '请携带token');
+        }
+
+        $userID = Cache::get($token);
+
+        if (!$userID){
+            return Y::json(101, 'token未找到');
+        }
+        $user = UserModel::where('id', $userID)->find();
+
+        $avatar = $request->post("avatar");
+
+        if ($avatar){
+            $user->avatar = $avatar;
+        }
+
+        $name = $request->post("name");
+
+        if ($name){
+            $user->name = $name;
+        }
+        $user->save();
+
+        return Y::json(0, '',$user);
+
+    }
+
     public function info(Request $request){
 
         $token = $request->header("Authorization");
@@ -38,7 +70,7 @@ class User extends Controller {
         $user = UserModel::where('id', $userID)->find();
 
         return Y::json(0, '',$user);
-        
+
     }
 
     public function login(Request $request){
@@ -62,7 +94,6 @@ class User extends Controller {
             return Y::json(101, '密码错误');
         }
         $token = $request->token("token","sha12");
-
         $userID = $user->id;
 
         Cache::set($token,$userID,0);
