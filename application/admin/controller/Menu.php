@@ -7,8 +7,10 @@
  */
 
 namespace app\admin\controller;
+use app\index\model\User;
 use cclion\Y;
 use think\Controller;
+use think\Db;
 use think\Request;
 
 class Menu extends Controller
@@ -53,7 +55,6 @@ class Menu extends Controller
 
         return Y::json(0, '',$data);
 
-        return $data;
     }
 
 
