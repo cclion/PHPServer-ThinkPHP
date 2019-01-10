@@ -1,4 +1,3 @@
-![](http://www.thinkphp.cn/Uploads/editor/2016-06-23/576b4732a6e04.png) 
 
 > ThinkPHP5的运行环境要求PHP5.6以上。
 
